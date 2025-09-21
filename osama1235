@@ -40,831 +40,935 @@
         </script><!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>موقع برقيات الشؤون الأدارية</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f1a35;
-            color: #ffffffd3;
-            direction: rtl;
-            overflow-x: hidden;
-        }
-        .container {
-            width: 600px;
-            margin: 20px auto;
-            background: #0f1a35;
-            padding: 30px;
-            border: 1.5px solid #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
-            z-index: 1;
-            overflow-y: auto;
-        }
-        h2 {
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            text-shadow: 0 0 5px rgb(255, 255, 255);
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 15px;
-            font-size: 1.1rem;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 14px;
-            margin-top: 8px;
-            border-radius: 10px;
-            border: 2px solid rgb(29, 28, 28);
-            background: #02204d;
-            color: #ffffff;
-            font-size: 1rem;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #ffffff;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-        }
-        textarea {
-            resize: vertical;
-            height: 100px;
-        }
-        button {
-            background-color: #ffffff;
-            color: #02204d;
-            font-weight: 900;
-            border: none;
-            padding: 14px 0;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            margin-top: 20px;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #e0e0e0;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 1);
-        }
-        .form-section {
-            display: none;
-        }
-        .form-section.active {
-            display: block;
-        }
-        .note {
-            color: #ffffff;
-            font-size: 1rem;
-            margin-top: 10px;
-            font-style: italic;
-            text-align: right;
-        }
-        #toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .output-text {
-            margin-top: 20px;
-            display: none;
-        }
-        .output-text.active {
-            display: block;
-        }
-        .image-gallery {
-            position: absolute;
-            top: 20px;
-            width: 100%;
-            z-index: 2;
-        }
-        .image-gallery img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border: 2px solid #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        }
-        .image-gallery img:first-child {
-            position: absolute;
-            left: 20px;
-        }
-        .image-gallery img:last-child {
-            position: absolute;
-            right: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>النماذج الإدارية</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0f1a35;
+      color: #ffffffd3;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      padding-top: 50px;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 #ffffff; }
+      50% { box-shadow: 0 0 20px #ffffff; }
+      100% { box-shadow: 0 0 0 #ffffff; }
+    }
+    input:hover, select:hover, textarea:hover, button:hover,
+    input:focus, select:focus, textarea:focus, button:focus {
+      border-color: #ffffff;
+      animation: pulseGlow 0.6s ease;
+      outline: none;
+    }
+    canvas#starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: #0f1a35;
+    }
+    .custom-alert {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 20px 40px;
+      border-radius: 15px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: translate(-50%, -20px);
+      transition: all 0.4s ease-in-out;
+      z-index: 99999;
+      font-weight: bold;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .custom-alert.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+    .custom-alert.success {
+      background-color: #28a745;
+      color: white;
+      border: 3px solid #218838;
+      animation: successPulse 0.5s ease-in-out;
+    }
+    .custom-alert.error {
+      background-color: #dc3545;
+      color: white;
+      border: 3px solid #c82333;
+      animation: errorShake 0.4s ease-in-out;
+    }
+    @keyframes successPulse {
+      0% { transform: translate(-50%, 0) scale(1); }
+      50% { transform: translate(-50%, 0) scale(1.05); }
+      100% { transform: translate(-50%, 0) scale(1); }
+    }
+    @keyframes errorShake {
+      0%, 100% { transform: translate(-50%, 0); }
+      25% { transform: translate(-50%, -5px); }
+      50% { transform: translate(-50%, 5px); }
+      75% { transform: translate(-50%, -3px); }
+    }
+    .image-gallery {
+      position: fixed;
+      top: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 25px;
+      z-index: 9999;
+    }
+    .image-gallery img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 15px;
+      transition: transform 0.3s ease;
+    }
+    .image-gallery img:hover {
+      transform: scale(1.05);
+    }
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1000px;
+    }
+    #formTypeContainer {
+      width: 100%;
+      max-width: 700px;
+      text-align: center;
+      margin-bottom: 15px;
+      background: rgba(15, 26, 53, 0.9);
+      padding: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(6px);
+      display: block;
+    }
+    #formTypeContainer label {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: block;
+    }
+    #formTypeContainer select {
+      width: 100%;
+      padding: 15px;
+      background: #02204d;
+      color: #ffffff;
+      border: 3px solid rgb(29, 28, 28);
+      border-radius: 12px;
+      font-size: 1.2rem;
+    }
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      background: rgba(15, 26, 53, 0.9);
+      padding: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4), 0 0 25px rgba(0, 0, 0, 0.6);
+      animation: glow 3s ease-in-out infinite alternate;
+      z-index: 1;
+      display: none;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+    @keyframes glow {
+      0% {
+        box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4), 0 0 25px rgba(0, 0, 0, 0.6);
+      }
+      100% {
+        box-shadow: 0 8px 30px rgba(255, 255, 255, 0.6), 0 0 35px rgba(0, 0, 0, 0.7);
+      }
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-shadow: 0 0 6px rgb(255, 255, 255);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      font-size: 1.3rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 3px solid rgb(29, 28, 28);
+      background: #02204d;
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #ffffff;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+    }
+    textarea {
+      resize: vertical;
+      height: 120px;
+    }
+    button {
+      background-color: #ffffff;
+      color: #02204d;
+      font-weight: 900;
+      border: none;
+      padding: 18px 0;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.4rem;
+      letter-spacing: 1.2px;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.9);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 20px;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #e0e0e0;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 1);
+    }
+    .form-section {
+      display: none;
+    }
+    .form-section.active {
+      display: block;
+    }
+    .person-group {
+      margin-bottom: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      padding: 15px;
+      border-radius: 10px;
+    }
+    .remove-person {
+      background-color: #dc3545;
+      color: white;
+      width: auto;
+      padding: 5px 15px;
+      margin-top: 10px;
+    }
+    .remove-person:hover {
+      background-color: #c82333;
+    }
+    .add-person {
+      background-color: #28a745;
+      color: white;
+      width: auto;
+      padding: 5px 15px;
+      margin-top: 10px;
+    }
+    .add-person:hover {
+      background-color: #218838;
+    }
+    .note {
+      color: #ffffff;
+      font-size: 1.2rem;
+      margin-top: 10px;
+      font-style: italic;
+      text-align: right;
+    }
+    #loadingOverlay {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      opacity: 1;
+      transition: opacity 1s ease;
+      pointer-events: all;
+    }
+    #loadingOverlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .dual-fade-loader {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+    .circle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 6px solid white;
+      opacity: 0;
+      animation: fadePulse 1.4s infinite ease-in-out;
+    }
+    .circle:nth-child(2) {
+      animation-delay: 0.7s;
+      border-color: #ccc;
+    }
+    @keyframes fadePulse {
+      0% { transform: scale(0.5); opacity: 0.3; }
+      50% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+  </style>
 </head>
-<body onload="setDefaultDatesAndTimes()">
-    <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-    </script>
-    <div class="image-gallery">
-        <img src="https://www.raed.net/img?id=1413653" alt="image-1" />
-        <img src="https://www.raed.net/img?id=1413652" alt="image-2" />
+<body>
+  <div class="image-gallery">
+    <img src="https://www.raed.net/img?id=1413653" alt="Logo Left">
+    <img src="https://www.raed.net/img?id=1413652" alt="Logo Right">
+  </div>
+  <canvas id="starfield"></canvas>
+  <div id="loadingOverlay">
+    <div class="dual-fade-loader">
+      <div class="circle"></div>
+      <div class="circle"></div>
     </div>
-    <div class="container">
-        <h2 id="formTitle">موقع برقيات الشؤون الأدارية</h2>
-        <label>نوع الطلب</label>
-        <select id="requestType" onchange="switchForm()">
-            <option value="">اختر نوع الطلب</option>
-            <option value="استقالة">استقالة</option>
-            <option value="إجازة داخلية">إجازة داخلية</option>
-            <option value="إجازة خارجية">إجازة خارجية</option>
-            <option value="خارج شفت">خارج شفت</option>
-            <option value="تعيين شؤون إدارية">تعيين في الشؤون الإدارية</option>
-            <option value="إعفاء شؤون إدارية">إعفاء من الشؤون الإدارية</option>
-            <option value="انتداب">انتداب</option>
+  </div>
+  <div id="notification" class="custom-alert"></div>
+  <div class="main-content">
+    <div id="formTypeContainer">
+      <label for="formType">برقيات القيادات</label>
+      <select id="formType" onchange="toggleForm()">
+        <option value="">نوع البرقية</option>
+        <option value="promotion">ترقية</option>
+        <option value="gse">توظيف الأمن العام</option>
+        <option value="admin">تعيين إداري</option>
+        <option value="military">تعيين عسكري</option>
+        <option value="authorized">تعيين معتمد</option>
+      </select>
+    </div>
+    <div class="container" id="container">
+      <h1>برقيات القيادة</h1>
+      <label for="issuer">اختر القائد:</label>
+      <select id="issuer">
+        <option value="">اختر قائد</option>
+        <option value="شامان القحطاني|<@1276531558798327859>||<@&1271924904593330267>|<@&1271924904572227600> <@1276531558798327859>">شامان القحطاني</option>
+        <option value="هيثم الشمري|<@725655535172714608>||<@&1271924904572227603>|<@&1271924904572227598> <@725655535172714608>">هيثم الشمري</option>
+        <option value="رياض الحربي|<@1226723195168493620>||<@&1271924904572227602>|<@&1271924904572227598> <@1226723195168493620>">رياض الحربي</option>
+        <option value="باسل الشمري|<@1199056662640738375>||<@&1271924904572227602>|<@&1271924904572227596> <@1199056662640738375>">باسل الشمري</option>
+        <option value="محمد الجهني|<@1041025088813813810>||<@&1271924904572227602>|<@&1271924904572227596> <@1041025088813813810>">محمد الجهني</option>
+        <option value="مسند بن حمد|<@1125795366588121108>||<@&1271924904572227601>|<@&1271924904572227594> <@1125795366588121108>">مسند بن حمد</option>
+        <option value="متعب الزهراني|<@1187076971931381836>||<@&1271924904572227601>|<@&1271924904572227594> <@1187076971931381836>">متعب الزهراني</option>
+      </select>
+      <div id="promotion" class="form-section">
+        <label for="telegramNumber0">رقم البرقية:</label>
+        <input type="text" id="telegramNumber0" placeholder="أدخل رقم البرقية">
+        <label for="promotionType0">نوع الترقية:</label>
+        <input type="text" id="promotionType0" placeholder="أدخل نوع الترقية مثل: الترقيات المستحقة">
+        <div class="person-group" id="personGroup0">
+          <label for="userIds0_0">كوبي ايدي العسكري</label>
+          <textarea id="userIds0_0" placeholder="ID"></textarea>
+          <label for="rankOld0_0">الرتبة السابقة:</label>
+          <select id="rankOld0_0">
+            <option value="">اختر رتبة</option>
+            <option value="<@&1271924904509444211>">جندي</option>
+            <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+            <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+            <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+            <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+            <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+            <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+            <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+            <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+            <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+            <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+            <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+            <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+            <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+            <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+            <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+            <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
+          </select>
+          <label for="rankNew0_0">الرتبة الجديدة:</label>
+          <select id="rankNew0_0">
+            <option value="">اختر رتبة</option>
+            <option value="<@&1271924904509444211>">جندي</option>
+            <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+            <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+            <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+            <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+            <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+            <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+            <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+            <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+            <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+            <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+            <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+            <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+            <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+            <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+            <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+            <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
+          </select>
+        </div>
+        <button class="add-person" onclick="addPerson()">إضافة شخص آخر</button>
+      </div>
+      <div id="gse" class="form-section">
+        <label for="telegramNumberGSE0">رقم البرقية:</label>
+        <input type="text" id="telegramNumberGSE0" placeholder="أدخل رقم البرقية">
+        <label for="batchNumber0">رقم الدفعة:</label>
+        <input type="text" id="batchNumber0" placeholder="أدخل رقم الدفعة">
+        <label for="userIdsGSE0">كوبي ايدي العسكري</label>
+        <textarea id="userIdsGSE0" placeholder="ID"></textarea>
+        <label for="rankGSE0">الرتبة:</label>
+        <select id="rankGSE0">
+          <option value="">اختر رتبة</option>
+          <option value="<@&1271924904509444211>">جندي</option>
+          <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+          <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+          <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+          <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+          <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+          <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+          <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+          <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+          <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+          <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+          <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+          <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+          <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+          <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+          <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+          <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
         </select>
-
-        <!-- نموذج الاستقالة -->
-        <div id="formResignation" class="form-section">
-            <label for="telegramNumber">رقم البرقية</label>
-            <input type="text" id="telegramNumber" placeholder="مثال: 1234" required />
-            <label for="soldierCopyId">كوبي آيدي العسكري</label>
-            <input type="text" id="soldierCopyId" placeholder="مثال: 652225460205387777" required />
-            <label for="soldierName">اسم العسكري</label>
-            <input type="text" id="soldierName" placeholder="مثال: أسامة العنزي" required />
-            <label for="soldierCode">الكود العسكري</label>
-            <input type="text" id="soldierCode" placeholder="مثال: P-123" required />
-            <label for="soldierRank">رتبة العسكري</label>
-            <select id="soldierRank" required>
-                <option value="">اختر رتبة العسكري</option>
-                <option value="<@&1271924904509444214>">وكيل رقيب</option>
-                <option value="<@&1271924904509444215>">رقيب</option>
-                <option value="<@&1271924904509444216>">رقيب أول</option>
-                <option value="<@&1271924904530542735>">رئيس رقباء</option>
-                <option value="<@&1271924904530542736>">ملازم</option>
-                <option value="<@&1271924904530542737>">ملازم أول</option>
-                <option value="<@&1271924904530542738>">نقيب</option>
-                <option value="<@&1271924904530542739>">رائد</option>
-                <option value="<@&1271924904530542741>">مقدم</option>
-                <option value="<@&1271924904530542743>">عقيد</option>
-                <option value="<@&1271924904572227594>">عميد</option>
-                <option value="<@&1271924904572227596>">لواء</option>
-                <option value="<@&1271924904572227598>">فريق</option>
-                <option value="<@&1271924904572227600>">فريق أول</option>
-            </select>
-            <textarea id="resignationOutput" class="output-text" placeholder="النص المنسوخ سيظهر هنا إذا فشل النسخ التلقائي" readonly></textarea>
-            <button onclick="copyResignation()">نسخ نموذج الاستقالة</button>
-        </div>
-
-        <!-- نموذج إجازة داخلية -->
-        <div id="formInternalLeave" class="form-section">
-            <p class="note">تنويه: إجازة داخلية، تاريخ البداية هو اليوم، ووقت العودة يعتمد على المدة المدخلة بالساعات</p>
-            <label for="telegramInternal">رقم البرقية</label>
-            <input type="text" id="telegramInternal" placeholder="مثال: 1234" />
-            <label for="militaryIdInternal">كوبي آيدي العسكري</label>
-            <input type="text" id="militaryIdInternal" placeholder="مثال: 652225460205387777" />
-            <label for="startTimeInternal">وقت بداية الإجازة (ساعة ودقيقة)</label>
-            <input type="time" id="startTimeInternal" />
-            <label for="durationInternal">مدة الإجازة (ساعات)</label>
-            <input type="number" id="durationInternal" min="1" max="24" placeholder="مثال: 2" required />
-            <textarea id="internalLeaveOutput" class="output-text" placeholder="النص المنسوخ سيظهر هنا إذا فشل النسخ التلقائي" readonly></textarea>
-            <button onclick="copyInternalLeave()">نسخ نموذج الإجازة الداخلية</button>
-        </div>
-
-        <!-- نموذج إجازة خارجية -->
-        <div id="formExternalLeave" class="form-section">
-            <p class="note">تنويه: إجازة خارجية بمدة 5، 10، 15، 20، 25، أو 30 يومًا، يتم تعيين تواريخ البداية والنهاية تلقائيًا</p>
-            <label for="telegramExternal">رقم البرقية</label>
-            <input type="text" id="telegramExternal" placeholder="مثال: 1234" />
-            <label for="militaryIdExternal">كوبي آيدي العسكري</label>
-            <input type="text" id="militaryIdExternal" placeholder="مثال: 652225460205387777" />
-            <label for="durationExternal">مدة الإجازة (أيام)</label>
-            <select id="durationExternal" required>
-                <option value="">اختر مدة الإجازة</option>
-                <option value="5">5 أيام</option>
-                <option value="10">10 أيام</option>
-                <option value="15">15 أيام</option>
-                <option value="20">20 أيام</option>
-                <option value="25">25 أيام</option>
-                <option value="30">30 أيام</option>
-            </select>
-            <textarea id="externalLeaveOutput" class="output-text" placeholder="النص المنسوخ سيظهر هنا إذا فشل النسخ التلقائي" readonly></textarea>
-            <button onclick="copyExternalLeave()">نسخ نموذج الإجازة الخارجية</button>
-        </div>
-
-        <!-- نموذج إجازة خارج شفت -->
-        <div id="formShiftLeave" class="form-section">
-            <p class="note">تنويه: إجازة خارج شفت من 1 ساعة إلى 4 ساعات فقط</p>
-            <label for="telegramShift">رقم البرقية</label>
-            <input type="text" id="telegramShift" placeholder="مثال: 1234" />
-            <label for="militaryIdShift">كوبي آيدي العسكري</label>
-            <input type="text" id="militaryIdShift" placeholder="مثال: 652225460205387777" />
-            <label for="startTimeShift">وقت بداية الإجازة (ساعة ودقيقة)</label>
-            <input type="time" id="startTimeShift" />
-            <label for="durationShift">مدة الإجازة (ساعات)</label>
-            <input type="number" id="durationShift" min="1" max="4" value="1" required />
-            <textarea id="shiftLeaveOutput" class="output-text" placeholder="النص المنسوخ سيظهر هنا إذا فشل النسخ التلقائي" readonly></textarea>
-            <button onclick="copyShiftLeave()">نسخ نموذج خارج شفت</button>
-        </div>
-
-        <!-- نموذج تعيين في الشؤون الإدارية -->
-        <div id="formAppointmentAdmin" class="form-section">
-            <label for="soldierIdAppointment">كوبي آيدي العسكري</label>
-            <input type="text" id="soldierIdAppointment" placeholder="مثال: 652225460205387777" />
-            <label for="telegramNumberAppointment">رقم البرقية</label>
-            <input type="text" id="telegramNumberAppointment" placeholder="مثال: 0000" />
-            <textarea id="appointmentAdminOutput" class="output-text" placeholder="النص المنسوخ سيظهر هنا إذا فشل النسخ التلقائي" readonly></textarea>
-            <button onclick="copyAppointmentAdmin()">نسخ نموذج التعيين</button>
-        </div>
-
-        <!-- نموذج إعفاء من الشؤون الإدارية -->
-        <div id="formReassignmentAdmin" class="form-section">
-            <label for="soldierIdReassignment">كوبي آيدي العسكري</label>
-            <input type="text" id="soldierIdReassignment" placeholder="مثال: 652225460205387777" />
-            <label for="telegramNumberReassignment">رقم البرقية</label>
-            <input type="text" id="telegramNumberReassignment" placeholder="مثال: 0000" />
-            <textarea id="reassignmentAdminOutput" class="output-text" placeholder="النص المنسوخ سيظهر هنا إذا فشل النسخ التلقائي" readonly></textarea>
-            <button onclick="copyReassignmentAdmin()">نسخ نموذج الإعفاء</button>
-        </div>
-
-        <!-- نموذج الانتداب -->
-        <div id="formAssignment" class="form-section">
-            <label for="telegramAssignment">رقم البرقية</label>
-            <input type="text" id="telegramAssignment" placeholder="مثال: 1234" />
-            <label for="militaryIdAssignment">كوبي آيدي العسكري</label>
-            <input type="text" id="militaryIdAssignment" placeholder="مثال: 652225460205387777" />
-            <label for="sectorAssignment">القطاع المنتدب إليه</label>
-            <select id="sectorAssignment" required>
-                <option value="">اختر القطاع</option>
-                <option value="<@&1271924904241004678>">الهلال الأحمر</option>
-                <option value="<@&1364185180180316180>">كراج الميكانيك</option>
-                <option value="<@&1271924904325025833>">حرس الحدود</option>
-                <option value="<@&1329566391392796784>">الأمن الدبلوماسي</option>
-            </select>
-            <label for="durationAssignment">مدة الانتداب (أيام)</label>
-            <input type="number" id="durationAssignment" min="1" placeholder="مثال: 2" />
-            <textarea id="assignmentOutput" class="output-text" placeholder="النص المنسوخ سيظهر هنا إذا فشل النسخ التلقائي" readonly></textarea>
-            <button onclick="copyAssignment()">نسخ نموذج الانتداب</button>
-        </div>
+      </div>
+      <div id="admin" class="form-section">
+        <label for="telegramNumberAdmin0">رقم البرقية:</label>
+        <input type="text" id="telegramNumberAdmin0" placeholder="أدخل رقم البرقية">
+        <label for="userIdsAdmin0">معرفات المستخدمين (يمكن إدخال متعددة في سطور):</label>
+        <textarea id="userIdsAdmin0" placeholder="أدخل المعرفات، واحد في كل سطر أو مفصولة بفواصل"></textarea>
+        <label for="rankAdmin0">الرتبة:</label>
+        <select id="rankAdmin0">
+          <option value="">اختر رتبة</option>
+          <option value="<@&1271924904509444211>">جندي</option>
+          <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+          <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+          <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+          <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+          <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+          <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+          <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+          <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+          <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+          <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+          <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+          <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+          <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+          <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+          <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+          <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
+        </select>
+      </div>
+      <div id="military" class="form-section">
+        <label for="telegramNumberMilitary0">رقم البرقية:</label>
+        <input type="text" id="telegramNumberMilitary0" placeholder="أدخل رقم البرقية">
+        <label for="userIdsMilitary0">معرفات المستخدمين (يمكن إدخال متعددة في سطور):</label>
+        <textarea id="userIdsMilitary0" placeholder="أدخل المعرفات، واحد في كل سطر أو مفصولة بفواصل"></textarea>
+        <label for="rankMilitary0">الرتبة:</label>
+        <select id="rankMilitary0">
+          <option value="">اختر رتبة</option>
+          <option value="<@&1271924904509444211>">جندي</option>
+          <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+          <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+          <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+          <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+          <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+          <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+          <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+          <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+          <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+          <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+          <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+          <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+          <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+          <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+          <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+          <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
+        </select>
+      </div>
+      <div id="authorized" class="form-section">
+        <label for="telegramNumberAuthorized0">رقم البرقية:</label>
+        <input type="text" id="telegramNumberAuthorized0" placeholder="أدخل رقم البرقية">
+        <label for="userIdsAuthorized0">معرفات المستخدمين (يمكن إدخال متعددة في سطور):</label>
+        <textarea id="userIdsAuthorized0" placeholder="أدخل المعرفات، واحد في كل سطر أو مفصولة بفواصل"></textarea>
+        <label for="rankAuthorized0">الرتبة:</label>
+        <select id="rankAuthorized0">
+          <option value="">اختر رتبة</option>
+          <option value="<@&1271924904509444211>">جندي</option>
+          <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+          <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+          <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+          <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+          <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+          <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+          <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+          <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+          <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+          <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+          <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+          <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+          <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+          <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+          <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+          <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
+        </select>
+      </div>
+      <button onclick="generateAndCopy()">نسخ النموذج</button>
     </div>
+  </div>
+  <script>
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+      return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+        try {
+          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+          var firstSheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[firstSheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+          var filteredData = jsonData.filter(row => row.some(filledCell));
+          var headerRowIndex = filteredData.findIndex((row, index) =>
+            row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+          );
+          if (headerRowIndex === -1 || headerRowIndex > 25) {
+            headerRowIndex = 0;
+          }
+          var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+          return csv;
+        } catch (e) {
+          console.error(e);
+          return "";
+        }
+      }
+      return gk_fileData[filename] || "";
+    }
 
-    <script>
-        function setDefaultDatesAndTimes() {
-            const now = new Date();
-            const saudiOffset = 3 * 60;
-            const localOffset = now.getTimezoneOffset();
-            const saudiTime = new Date(now.getTime() + (saudiOffset + localOffset) * 60 * 1000);
+    function toggleForm() {
+      const formType = document.getElementById('formType').value;
+      const container = document.getElementById('container');
+      const promotionDiv = document.getElementById('promotion');
+      const gseDiv = document.getElementById('gse');
+      const adminDiv = document.getElementById('admin');
+      const militaryDiv = document.getElementById('military');
+      const authorizedDiv = document.getElementById('authorized');
 
-            const formatTime = (date) => {
-                let hours = date.getHours();
-                let minutes = date.getMinutes();
-                hours = hours < 10 ? '0' + hours : hours;
-                minutes = minutes < 10 ? '0' + minutes : minutes;
-                return `${hours}:${minutes}`;
-            };
+      if (container) {
+        container.style.display = formType ? 'block' : 'none';
+        promotionDiv.classList.toggle('active', formType === 'promotion');
+        gseDiv.classList.toggle('active', formType === 'gse');
+        adminDiv.classList.toggle('active', formType === 'admin');
+        militaryDiv.classList.toggle('active', formType === 'military');
+        authorizedDiv.classList.toggle('active', formType === 'authorized');
+      } else {
+        console.error("Element with id 'container' not found.");
+      }
+    }
 
-            // تعيين وقت البداية للإجازة الداخلية
-            document.getElementById('startTimeInternal').value = formatTime(saudiTime);
+    let personCount = 1;
+    function addPerson() {
+      personCount++;
+      const personGroup = document.createElement('div');
+      personGroup.className = 'person-group';
+      personGroup.id = `personGroup${personCount}`;
+      personGroup.innerHTML = `
+        <label for="userIds0_${personCount}">معرفات المستخدمين (يمكن إدخال متعددة في سطور):</label>
+        <textarea id="userIds0_${personCount}" placeholder="أدخل المعرفات، واحد في كل سطر أو مفصولة بفواصل"></textarea>
+        <label for="rankOld0_${personCount}">الرتبة السابقة:</label>
+        <select id="rankOld0_${personCount}">
+          <option value="">اختر رتبة</option>
+          <option value="<@&1271924904509444211>">جندي</option>
+          <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+          <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+          <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+          <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+          <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+          <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+          <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+          <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+          <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+          <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+          <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+          <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+          <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+          <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+          <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+          <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
+        </select>
+        <label for="rankNew0_${personCount}">الرتبة الجديدة:</label>
+        <select id="rankNew0_${personCount}">
+          <option value="">اختر رتبة</option>
+          <option value="<@&1271924904509444211>">جندي</option>
+          <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+          <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+          <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+          <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+          <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+          <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+          <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+          <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+          <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+          <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+          <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+          <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+          <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+          <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+          <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+          <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
+        </select>
+        <button class="remove-person" onclick="removePerson(${personCount})">حذف</button>
+      `;
+      document.getElementById('promotion').insertBefore(personGroup, document.querySelector('#promotion .add-person'));
+    }
 
-            // تعيين وقت البداية لخارج شفت
-            document.getElementById('startTimeShift').value = formatTime(saudiTime);
+    function removePerson(index) {
+      const personGroup = document.getElementById(`personGroup${index}`);
+      if (personGroup) {
+        personGroup.remove();
+      }
+    }
+
+    function generateAndCopy() {
+      const formType = document.getElementById('formType').value;
+      const issuer = document.getElementById('issuer').value;
+      let outputText = '';
+
+      if (!issuer) {
+        showNotification('يرجى اختيار القائد!', 'error');
+        return;
+      }
+
+      const [issuerName, issuerMention, issuerPrefix, issuerAfterSader, issuerAfterAl] = issuer.split('|');
+
+      if (formType === 'promotion') {
+        const telegramNumber = document.getElementById('telegramNumber0').value || 'غير محدد';
+        const promotionType = document.getElementById('promotionType0').value || 'الترقيات المستحقة';
+        let promotions = [];
+
+        for (let i = 0; i <= personCount; i++) {
+          const userIdsInput = document.getElementById(`userIds0_${i}`)?.value;
+          const rankOld = document.getElementById(`rankOld0_${i}`)?.value;
+          const rankNew = document.getElementById(`rankNew0_${i}`)?.value;
+
+          if (userIdsInput && rankOld && rankNew) {
+            const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
+            const userIds = userIdsRaw.map(id => `<@${id}>`);
+            const mentions = userIds.join('\n\n');
+            promotions.push(`من رتبة ${rankOld} إلى رتبة ${rankNew}\n\n${mentions}\n\n`);
+          }
         }
 
-        function showToast(message, type = 'success') {
-            let container = document.getElementById('toast-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'toast-container';
-                container.style.position = 'fixed';
-                container.style.top = '20px';
-                container.style.left = '50%';
-                container.style.transform = 'translateX(-50%)';
-                container.style.zIndex = 9999;
-                container.style.display = 'flex';
-                container.style.flexDirection = 'column';
-                container.style.alignItems = 'center';
-                document.body.appendChild(container);
-            }
+        if (promotions.length > 0) {
+          outputText = `
+**﷽
 
-            const toast = document.createElement('div');
-            toast.textContent = message;
-            toast.style.background = type === 'success' ? 'rgba(0, 128, 0, 0.7)' : 'rgba(255, 0, 0, 0.7)';
-            toast.style.color = '#fff';
-            toast.style.fontWeight = 'bold';
-            toast.style.padding = '12px 20px';
-            toast.style.marginTop = '10px';
-            toast.style.borderRadius = '8px';
-            toast.style.minWidth = '250px';
-            toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(-20px)';
-            toast.style.transition = '0.5s';
+صــادر:${issuerPrefix}${issuerAfterSader}
+-
+الـ ${issuerAfterAl}
 
-            container.appendChild(toast);
+\`برقية رقم: ${telegramNumber}\`
 
-            setTimeout(() => {
-                toast.style.opacity = '1';
-                toast.style.transform = 'translateY(0)';
-            }, 100);
+\`الموضوع: ${promotionType}\`
 
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-20px)';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
-        }
+يتم ترقية العسكريين المذكورين أدناه:
 
-        function copyResignation() {
-            try {
-                const telegramNumber = document.getElementById('telegramNumber').value.trim();
-                const soldierCopyId = document.getElementById('soldierCopyId').value.trim();
-                const soldierName = document.getElementById('soldierName').value.trim();
-                const soldierCode = document.getElementById('soldierCode').value.trim();
-                const soldierRank = document.getElementById('soldierRank').value;
-                if (!telegramNumber || !soldierCopyId || !soldierName || !soldierCode || !soldierRank) {
-                    showToast('يرجى ملء جميع الحقول', 'error');
-                    return;
-                }
-                const text = `**﷽
+${promotions.join('\n')}
 
-قرار صادر من مكتب الشؤون الإدارية
-
-\`برقية رقم : ${telegramNumber}\`
-
-يتضمن الموافقة على منح قبول استقالة العسكري المحترم :
-<@${soldierCopyId}>
-
-\`الاسم : ${soldierName}\`
-
-\`الكود العسكري : ${soldierCode}\`
-
-الرتبة : ${soldierRank}
-
-\`مع الشكر على ما قدمتمه من جهود خلال فترة خدمتك، ونسأل الله أن يوفقك في مسيرتك القادمة.\`
-
-ترسل نسخة للـ <@&1271924904467628180>
-
-اعتماد وتوقيع:
-مدير مكتب <@&1407509152141676715>
-[ <@1321526146390556796> ] **`;
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('✅ تم نسخ نموذج الاستقالة إلى الحافظة!', 'success');
-                    document.getElementById('resignationOutput').classList.remove('active');
-                    document.getElementById('resignationOutput').value = '';
-                }).catch(() => {
-                    showToast('فشل النسخ التلقائي، النص متاح للنسخ يدويًا أدناه', 'error');
-                    document.getElementById('resignationOutput').value = text;
-                    document.getElementById('resignationOutput').classList.add('active');
-                });
-            } catch (e) {
-                console.error('Error in copyResignation:', e);
-                showToast('حدث خطأ غير متوقع، يرجى المحاولة مجددًا', 'error');
-            }
-        }
-
-        function copyInternalLeave() {
-            try {
-                const telegram = document.getElementById('telegramInternal').value.trim();
-                const id = document.getElementById('militaryIdInternal').value.trim();
-                const startTime = document.getElementById('startTimeInternal').value;
-                const durationHours = parseInt(document.getElementById('durationInternal').value.trim(), 10);
-                if (!telegram || !id || !startTime || !durationHours || durationHours < 1 || durationHours > 24) {
-                    showToast('يرجى تعبئة جميع الحقول بشكل صحيح. يجب أن تكون مدة الإجازة بين 1 و24 ساعة.', 'error');
-                    return;
-                }
-                const now = new Date();
-                const saudiOffset = 3 * 60;
-                const localOffset = now.getTimezoneOffset();
-                const saudiTime = new Date(now.getTime() + (saudiOffset + localOffset) * 60 * 1000);
-                const [hour, minute] = startTime.split(':').map(Number);
-                const startDate = new Date(saudiTime.getFullYear(), saudiTime.getMonth(), saudiTime.getDate(), hour, minute, 0);
-                const endDate = new Date(startDate.getTime() + durationHours * 3600 * 1000);
-                const format12Hour = (date) => {
-                    let hours = date.getHours();
-                    const minutes = date.getMinutes();
-                    const ampm = hours >= 12 ? 'مساء' : 'صباح';
-                    hours = hours % 12 || 12;
-                    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-                    return `${hours}:${minutesStr} ${ampm}`;
-                };
-                const formatDateYMD = (date) => {
-                    const y = date.getFullYear();
-                    let m = date.getMonth() + 1;
-                    let d = date.getDate();
-                    m = m < 10 ? '0' + m : m;
-                    d = d < 10 ? '0' + d : d;
-                    return `${y}/${m}/${d}`;
-                };
-                const text = `**﷽
-
-قرار صادر من مكتب الشؤون الإدارية
-
-\`برقية رقم : ${telegram}\`
-
-ينـص على قبول إجازة العسـكري المحترم :
-
-<@${id}>
-
-\`\`\`
-تبدأ من تاريخ: ${formatDateYMD(startDate)}
-الساعة: ${format12Hour(startDate)} بتوقيت مكة المكرمة
-\`\`\`
-\`\`\`تاريخ العودة: ${formatDateYMD(endDate)}
-الساعة: ${format12Hour(endDate)} بتوقيت مكة المكرمة\`\`\`
-
-ترسل نسخة للـ <@&1271924904467628180>
-
-اعتماد وتوقيع:
-مدير مكتب الـ <@&1271924904467628180>
-[ <@1321526146390556796> ] **`;
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('✅ تم نسخ نموذج الإجازة الداخلية إلى الحافظة!', 'success');
-                    document.getElementById('internalLeaveOutput').classList.remove('active');
-                    document.getElementById('internalLeaveOutput').value = '';
-                }).catch(() => {
-                    showToast('فشل النسخ التلقائي، النص متاح للنسخ يدويًا أدناه', 'error');
-                    document.getElementById('internalLeaveOutput').value = text;
-                    document.getElementById('internalLeaveOutput').classList.add('active');
-                });
-            } catch (e) {
-                console.error('Error in copyInternalLeave:', e);
-                showToast('حدث خطأ غير متوقع، يرجى المحاولة مجددًا', 'error');
-            }
-        }
-
-        function copyExternalLeave() {
-            try {
-                const telegram = document.getElementById('telegramExternal').value.trim();
-                const id = document.getElementById('militaryIdExternal').value.trim();
-                const durationDays = parseInt(document.getElementById('durationExternal').value, 10);
-                if (!telegram || !id || !durationDays) {
-                    showToast('يرجى تعبئة جميع الحقول بشكل صحيح.', 'error');
-                    return;
-                }
-                const now = new Date();
-                const saudiOffset = 3 * 60;
-                const localOffset = now.getTimezoneOffset();
-                const saudiTime = new Date(now.getTime() + (saudiOffset + localOffset) * 60 * 1000);
-                const startDate = saudiTime;
-                const endDate = new Date(saudiTime.getTime() + durationDays * 24 * 60 * 60 * 1000);
-                const formatDateYMD = (date) => {
-                    const y = date.getFullYear();
-                    let m = date.getMonth() + 1;
-                    let d = date.getDate();
-                    m = m < 10 ? '0' + m : m;
-                    d = d < 10 ? '0' + d : d;
-                    return `${y}/${m}/${d}`;
-                };
-                const text = `**﷽
-
-قرار صادر من مكتب الشؤون الإدارية
-
-\`برقية رقم : ${telegram}\`
-
-ينـص على قبول إجازة العسـكري المحترم :
-
-<@${id}>
-
-\`\`\`إجازة خارجية: ${durationDays} يوم
-تبدأ من تاريخ: ${formatDateYMD(startDate)}
-\`\`\`
-\`\`\`تاريخ العودة: ${formatDateYMD(endDate)}
-\`\`\`
-
-ترسل نسخة للـ <@&1271924904467628180>
-
-اعتماد وتوقيع:
-مدير مكتب الـ <@&1271924904467628180>
-[ <@1321526146390556796> ] **`;
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('✅ تم نسخ نموذج الإجازة الخارجية إلى الحافظة!', 'success');
-                    document.getElementById('externalLeaveOutput').classList.remove('active');
-                    document.getElementById('externalLeaveOutput').value = '';
-                }).catch(() => {
-                    showToast('فشل النسخ التلقائي، النص متاح للنسخ يدويًا أدناه', 'error');
-                    document.getElementById('externalLeaveOutput').value = text;
-                    document.getElementById('externalLeaveOutput').classList.add('active');
-                });
-            } catch (e) {
-                console.error('Error in copyExternalLeave:', e);
-                showToast('حدث خطأ غير متوقع، يرجى المحاولة مجددًا', 'error');
-            }
-        }
-
-        function copyShiftLeave() {
-            try {
-                const telegram = document.getElementById('telegramShift').value.trim();
-                const id = document.getElementById('militaryIdShift').value.trim();
-                const startTime = document.getElementById('startTimeShift').value;
-                const durationHours = parseInt(document.getElementById('durationShift').value.trim(), 10);
-                if (!telegram || !id || !startTime || !durationHours || durationHours < 1 || durationHours > 4) {
-                    showToast('يرجى تعبئة جميع الحقول بشكل صحيح. يجب أن تكون مدة الإجازة بين 1 و4 ساعات.', 'error');
-                    return;
-                }
-                const now = new Date();
-                const saudiOffset = 3 * 60;
-                const localOffset = now.getTimezoneOffset();
-                const saudiTime = new Date(now.getTime() + (saudiOffset + localOffset) * 60 * 1000);
-                const [hour, minute] = startTime.split(':').map(Number);
-                const startDate = new Date(saudiTime.getFullYear(), saudiTime.getMonth(), saudiTime.getDate(), hour, minute, 0);
-                const endDate = new Date(startDate.getTime() + durationHours * 3600 * 1000);
-                const format12Hour = (date) => {
-                    let hours = date.getHours();
-                    const minutes = date.getMinutes();
-                    const ampm = hours >= 12 ? 'م' : 'ص';
-                    hours = hours % 12 || 12;
-                    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-                    return `${hours}:${minutesStr} ${ampm}`;
-                };
-                const formatDateYMD = (date) => {
-                    const y = date.getFullYear();
-                    let m = date.getMonth() + 1;
-                    let d = date.getDate();
-                    m = m < 10 ? '0' + m : m;
-                    d = d < 10 ? '0' + d : d;
-                    return `${y}/${m}/${d}`;
-                };
-                const text = `**﷽
-
-قرار صادر من مكتب الشؤون الإدارية
-
-\`برقية رقم : ${telegram}\`
-
-ينـص على قبول إجازة خارج شفت العسـكري المحترم :
-
-<@${id}>
-
-\`\`\`إجازة خارج شفت
-
-تبدأ من تاريخ: ${formatDateYMD(startDate)}
-الساعة: ${format12Hour(startDate)} بتوقيت مكة المكرمة
-
-\`\`\`
-\`\`\`تاريخ العودة: ${formatDateYMD(endDate)}
-الساعة: ${format12Hour(endDate)} بتوقيت مكة المكرمة\`\`\`
-
-ترسل نسخة للـ <@&1271924904467628180>
-
-اعتماد وتوقيع:
-مدير مكتب <@&1407509152141676715>
-[ <@1321526146390556796> ] **`;
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('✅ تم نسخ نموذج خارج شفت إلى الحافظة!', 'success');
-                    document.getElementById('shiftLeaveOutput').classList.remove('active');
-                    document.getElementById('shiftLeaveOutput').value = '';
-                }).catch(() => {
-                    showToast('فشل النسخ التلقائي، النص متاح للنسخ يدويًا أدناه', 'error');
-                    document.getElementById('shiftLeaveOutput').value = text;
-                    document.getElementById('shiftLeaveOutput').classList.add('active');
-                });
-            } catch (e) {
-                console.error('Error in copyShiftLeave:', e);
-                showToast('حدث خطأ غير متوقع، يرجى المحاولة مجددًا', 'error');
-            }
-        }
-
-        function copyAppointmentAdmin() {
-            try {
-                let soldierId = document.getElementById('soldierIdAppointment').value.trim();
-                let telegramNumber = document.getElementById('telegramNumberAppointment').value.trim();
-                if (!soldierId || !telegramNumber) {
-                    showToast('يرجى تعبئة جميع الحقول بشكل صحيح.', 'error');
-                    return;
-                }
-                if (!soldierId.startsWith('<@')) soldierId = `<@${soldierId}>`;
-                const text = `**﷽
-
-قرار صادر من : مدير مكتب الـ <@&1271924904467628180>
-
-\`برقية رقم : ${telegramNumber}\`
-
-الموضوع : تعيين في الشؤون الأدارية
-
-يتضمن الموافقة على تعين في شعبة ( الاجازات و الاستقالات - الرصد - تصحيح برقيات )
-
-الموافقة على تعين العسكري المحترم : [ ${soldierId} ]
+وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
 
 ترسل نسخة لـ <@&1271924904467628180>
 
-اعتماد وتوقيع:
-مدير مكتب الـ <@&1271924904467628180>
+\`\`\`diff
++ في الختام نسأل الله العزيز الحكيم التوفيق والسداد
+\`\`\`
 
-[<@1321526146390556796>]**`;
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('✅ تم نسخ نموذج التعيين إلى الحافظة!', 'success');
-                    document.getElementById('appointmentAdminOutput').classList.remove('active');
-                    document.getElementById('appointmentAdminOutput').value = '';
-                }).catch(() => {
-                    showToast('فشل النسخ التلقائي، النص متاح للنسخ يدويًا أدناه', 'error');
-                    document.getElementById('appointmentAdminOutput').value = text;
-                    document.getElementById('appointmentAdminOutput').classList.add('active');
-                });
-            } catch (e) {
-                console.error('Error in copyAppointmentAdmin:', e);
-                showToast('حدث خطأ غير متوقع، يرجى المحاولة مجددًا', 'error');
-            }
+توقيع واعتماد:
+<@&1271924904593330267>
+<@1276531558798327859> <:__:1331348769610141839>
+
+<@&1271924904572227603>
+<@725655535172714608> <:__:1331348769610141839>**`;
+        } else {
+          showNotification('يرجى تعبئة بيانات الترقية!', 'error');
+          return;
+        }
+      } else if (formType === 'gse') {
+        const telegramNumber = document.getElementById('telegramNumberGSE0').value || '000';
+        const batchNumber = document.getElementById('batchNumber0').value || '';
+        const userIdsInput = document.getElementById('userIdsGSE0')?.value;
+        const rank = document.getElementById('rankGSE0')?.value;
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const startDate = `${year}/${month}/${day}`;
+
+        if (!userIdsInput || !rank) {
+          showNotification('يرجى تعبئة بيانات التوظيف!', 'error');
+          return;
         }
 
-        function copyReassignmentAdmin() {
-            try {
-                let soldierId = document.getElementById('soldierIdReassignment').value.trim();
-                let telegramNumber = document.getElementById('telegramNumberReassignment').value.trim();
-                if (!soldierId || !telegramNumber) {
-                    showToast('يرجى تعبئة جميع الحقول بشكل صحيح.', 'error');
-                    return;
-                }
-                if (!soldierId.startsWith('<@')) soldierId = `<@${soldierId}>`;
-                const text = `**﷽
+        const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
+        const userIds = userIdsRaw.map(id => `<@${id}>`);
+        const mentions = userIds.join('\n');
 
-قرار صادر من : مدير مكتب الـ <@&1271924904467628180>
+        outputText = `
+**﷽
 
-\`برقية رقم : ${telegramNumber}\`
+صــادر:${issuerPrefix}${issuerAfterSader}
+-
+الـ ${issuerAfterAl}
 
-الموضوع : اعفاء من الشؤون الأدارية
+\`برقية رقم: ${telegramNumber}\`
 
-يتم اعفاء العسكري المذكور ادناه من مهام الشؤون الإدارية :
+\`تم اعتماد توظيف دفعة رقم (${batchNumber}) من منسوبي الأمن العام، وعليه يلتحق الأفراد المعتمد توظيفهم ابتداءً من تاريخ: ${startDate}\`
 
-${soldierId}
+\`على جميع المقبولين مراجعة القوانين والالتزام بالتعليمات والأنظمة العسكرية المعمول بها.\`
+
+وبناءً على ذلك يتم توظيف المذكورين أدناه بـ رتبة ${rank} :
+
+${mentions}
+
+ترسل نسخة إلى مدير مكتب<@&1417408731825705003>الادارية لإعتماد القرار
+
+\`\`\`diff
++ في الختام سائلين الله لهم التوفيق والسداد
+\`\`\`
+
+توقيع وإعتماد :
+<@&1271924904593330267>
+<@1276531558798327859> <:__:1331348769610141839>
+
+<@&1271924904572227603>
+<@725655535172714608> <:__:1331348769610141839>**`;
+      } else if (formType === 'admin') {
+        const telegramNumber = document.getElementById('telegramNumberAdmin0').value || 'غير محدد';
+        const userIdsInput = document.getElementById('userIdsAdmin0')?.value;
+        const rank = document.getElementById('rankAdmin0')?.value;
+
+        if (userIdsInput && rank) {
+          const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
+          const userIds = userIdsRaw.map(id => `<@${id}>`);
+          const mentions = userIds.join('\n\n');
+          const assignmentList = `يتم تعيين المذكور أدناه:\n\n${mentions}\n\nبرتبة: ${rank}\n\n`;
+
+          outputText = `
+**﷽
+
+صــادر:${issuerPrefix}${issuerAfterSader}
+-
+الـ ${issuerAfterAl}
+
+\`برقية رقم: ${telegramNumber}\`
+
+\`الموضوع: تعيين إداري\`
+
+${assignmentList}
+
+وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
 
 ترسل نسخة لـ <@&1271924904467628180>
 
-اعتماد وتوقيع:
-مدير مكتب الـ <@&1271924904467628180>
+\`\`\`diff
++ في الختام نسأل الله العزيز الحكيم التوفيق والسداد
+\`\`\`
 
-[<@1321526146390556796>]**`;
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('✅ تم نسخ نموذج الإعفاء إلى الحافظة!', 'success');
-                    document.getElementById('reassignmentAdminOutput').classList.remove('active');
-                    document.getElementById('reassignmentAdminOutput').value = '';
-                }).catch(() => {
-                    showToast('فشل النسخ التلقائي، النص متاح للنسخ يدويًا أدناه', 'error');
-                    document.getElementById('reassignmentAdminOutput').value = text;
-                    document.getElementById('reassignmentAdminOutput').classList.add('active');
-                });
-            } catch (e) {
-                console.error('Error in copyReassignmentAdmin:', e);
-                showToast('حدث خطأ غير متوقع، يرجى المحاولة مجددًا', 'error');
-            }
+توقيع واعتماد:
+<@&1271924904593330267>
+<@1276531558798327859> <:__:1331348769610141839>
+
+<@&1271924904572227603>
+<@725655535172714608> <:__:1331348769610141839>**`;
+        } else {
+          showNotification('يرجى تعبئة بيانات التعيين الإداري!', 'error');
+          return;
         }
+      } else if (formType === 'military') {
+        const telegramNumber = document.getElementById('telegramNumberMilitary0').value || 'غير محدد';
+        const userIdsInput = document.getElementById('userIdsMilitary0')?.value;
+        const rank = document.getElementById('rankMilitary0')?.value;
 
-        function copyAssignment() {
-            try {
-                const telegram = document.getElementById('telegramAssignment').value.trim();
-                const militaryId = document.getElementById('militaryIdAssignment').value.trim();
-                const sector = document.getElementById('sectorAssignment').value;
-                const duration = parseInt(document.getElementById('durationAssignment').value.trim(), 10);
-                if (!telegram || !militaryId || !sector || !duration || duration <= 0) {
-                    showToast('يرجى تعبئة جميع الحقول بشكل صحيح.', 'error');
-                    return;
-                }
-                const now = new Date();
-                const saudiOffset = 3 * 60;
-                const localOffset = now.getTimezoneOffset();
-                const saudiTime = new Date(now.getTime() + (saudiOffset + localOffset) * 60 * 1000);
-                saudiTime.setHours(0, 0, 0, 0);
-                const startDateObj = saudiTime;
-                const endDateObj = new Date(startDateObj.getTime() + duration * 24 * 60 * 60 * 1000);
-                const formatDate = (date) => {
-                    const yyyy = date.getFullYear();
-                    const mm = (date.getMonth() + 1).toString().padStart(2, '0');
-                    const dd = date.getDate().toString().padStart(2, '0');
-                    return `${yyyy}/${mm}/${dd}`;
-                };
-                const text = `**﷽
+        if (userIdsInput && rank) {
+          const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
+          const userIds = userIdsRaw.map(id => `<@${id}>`);
+          const mentions = userIds.join('\n\n');
+          const assignmentList = `يتم تعيين المذكور أدناه:\n\n${mentions}\n\nبرتبة: ${rank}\n\n`;
 
-قرار صادر من مكتب الشؤون الإدارية
+          outputText = `
+**﷽
 
-\`برقية رقم : ${telegram}\`
+صــادر:${issuerPrefix}${issuerAfterSader}
+-
+الـ ${issuerAfterAl}
 
-يتضمن الموافقة على منح انتداب للعسكري المحترم:
+\`برقية رقم: ${telegramNumber}\`
 
-<@${militaryId}>
+\`الموضوع: تعيين عسكري\`
 
-القطاع المنتدب إليه : ${sector}
+${assignmentList}
 
-\`المدة : ${duration} يوم\`
+وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
 
-\`تبدأ من تاريخ : ${formatDate(startDateObj)}\`
+ترسل نسخة لـ <@&1271924904467628180>
 
-\`تنتهي في تاريخ : ${formatDate(endDateObj)}\`
+\`\`\`diff
++ في الختام نسأل الله العزيز الحكيم التوفيق والسداد
+\`\`\`
 
-ترسل نسخة للـ <@&1271924904467628180>
+توقيع واعتماد:
+<@&1271924904593330267>
+<@1276531558798327859> <:__:1331348769610141839>
 
-اعتماد وتوقيع:
-مدير مكتب <@&1407509152141676715>
-[ <@1321526146390556796> ] **`;
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('✅ تم نسخ نموذج الانتداب إلى الحافظة!', 'success');
-                    document.getElementById('assignmentOutput').classList.remove('active');
-                    document.getElementById('assignmentOutput').value = '';
-                }).catch(() => {
-                    showToast('فشل النسخ التلقائي، النص متاح للنسخ يدويًا أدناه', 'error');
-                    document.getElementById('assignmentOutput').value = text;
-                    document.getElementById('assignmentOutput').classList.add('active');
-                });
-            } catch (e) {
-                console.error('Error in copyAssignment:', e);
-                showToast('حدث خطأ غير متوقع، يرجى المحاولة مجددًا', 'error');
-            }
+<@&1271924904572227603>
+<@725655535172714608> <:__:1331348769610141839>**`;
+        } else {
+          showNotification('يرجى تعبئة بيانات التعيين العسكري!', 'error');
+          return;
         }
+      } else if (formType === 'authorized') {
+        const telegramNumber = document.getElementById('telegramNumberAuthorized0').value || 'غير محدد';
+        const userIdsInput = document.getElementById('userIdsAuthorized0')?.value;
+        const rank = document.getElementById('rankAuthorized0')?.value;
 
-        function switchForm() {
-            try {
-                const type = document.getElementById('requestType').value;
-                document.getElementById('formTitle').textContent = type ? `نموذج ${type}` : 'موقع برقيات الشؤون الأدارية';
-                const forms = document.querySelectorAll('.form-section');
-                forms.forEach(f => f.classList.remove('active'));
-                const outputs = document.querySelectorAll('.output-text');
-                outputs.forEach(o => {
-                    o.classList.remove('active');
-                    o.value = '';
-                });
-                let formId;
-                switch (type) {
-                    case 'استقالة':
-                        formId = 'formResignation';
-                        break;
-                    case 'إجازة داخلية':
-                        formId = 'formInternalLeave';
-                        break;
-                    case 'إجازة خارجية':
-                        formId = 'formExternalLeave';
-                        break;
-                    case 'خارج شفت':
-                        formId = 'formShiftLeave';
-                        break;
-                    case 'تعيين شؤون إدارية':
-                        formId = 'formAppointmentAdmin';
-                        break;
-                    case 'إعفاء شؤون إدارية':
-                        formId = 'formReassignmentAdmin';
-                        break;
-                    case 'انتداب':
-                        formId = 'formAssignment';
-                        break;
-                    default:
-                        formId = null;
-                }
-                if (formId) {
-                    const form = document.getElementById(formId);
-                    if (form) {
-                        form.classList.add('active');
-                    } else {
-                        console.error(`Form with ID ${formId} not found`);
-                    }
-                }
-            } catch (e) {
-                console.error('Error in switchForm:', e);
-                showToast('حدث خطأ غير متوقع، يرجى المحاولة مجددًا', 'error');
-            }
+        if (userIdsInput && rank) {
+          const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
+          const userIds = userIdsRaw.map(id => `<@${id}>`);
+          const mentions = userIds.join('\n\n');
+          const assignmentList = `يتم تعيين المذكور أدناه:\n\n${mentions}\n\nبرتبة: ${rank}\n\n`;
+
+          outputText = `
+**﷽
+
+صــادر:${issuerPrefix}${issuerAfterSader}
+-
+الـ ${issuerAfterAl}
+
+\`برقية رقم: ${telegramNumber}\`
+
+\`الموضوع: تعيين معتمد\`
+
+${assignmentList}
+
+وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
+
+ترسل نسخة لـ <@&1271924904467628180>
+
+\`\`\`diff
++ في الختام نسأل الله العزيز الحكيم التوفيق والسداد
+\`\`\`
+
+توقيع واعتماد:
+<@&1271924904593330267>
+<@1276531558798327859> <:__:1331348769610141839>
+
+<@&1271924904572227603>
+<@725655535172714608> <:__:1331348769610141839>**`;
+        } else {
+          showNotification('يرجى تعبئة بيانات التعيين المعتمد!', 'error');
+          return;
         }
-    </script>
+      }
+
+      navigator.clipboard.writeText(outputText).then(() => {
+        showNotification('تم النسخ بنجاح', 'success');
+      }).catch(() => {
+        showNotification('فشل النسخ', 'error');
+      });
+    }
+
+    function showNotification(message, type) {
+      const notification = document.getElementById('notification');
+      notification.innerText = message;
+      notification.className = `custom-alert ${type} show`;
+      setTimeout(() => {
+        notification.className = 'custom-alert';
+      }, 3000);
+    }
+
+    // Starfield Animation
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function createStar() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1 + 0.3,
+        speed: Math.random() * 0.3 + 0.1,
+        opacity: Math.random() * 0.7 + 0.3
+      };
+    }
+
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < 150; i++) {
+        stars.push(createStar());
+      }
+    }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.fill();
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(animateStars);
+    }
+
+    initStars();
+    animateStars();
+
+    // Loading Animation
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.classList.add('fade-out');
+      }, 1200);
+    });
+  </script>
 </body>
 </html>
