@@ -360,6 +360,7 @@
         <option value="admin">تعيين إداري</option>
         <option value="military">تعيين عسكري</option>
         <option value="authorized">تعيين معتمد</option>
+        <option value="reassignment">إعادة الخدمة</option>
       </select>
     </div>
     <div class="container" id="container">
@@ -538,6 +539,33 @@
           <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
         </select>
       </div>
+      <div id="reassignment" class="form-section">
+        <label for="telegramNumberReassignment0">رقم البرقية:</label>
+        <input type="text" id="telegramNumberReassignment0" placeholder="أدخل رقم البرقية">
+        <label for="userIdsReassignment0">معرفات المستخدمين (يمكن إدخال متعددة في سطور):</label>
+        <textarea id="userIdsReassignment0" placeholder="أدخل المعرفات، واحد في كل سطر أو مفصولة بفواصل"></textarea>
+        <label for="rankReassignment0">الرتبة:</label>
+        <select id="rankReassignment0">
+          <option value="">اختر رتبة</option>
+          <option value="<@&1271924904509444211>">جندي</option>
+          <option value="<@&1271924904509444212> <:gdgd:1329942751160307842>">جندي أول</option>
+          <option value="<@&1271924904509444213> <:ggd:1329942772798722058>">عريف</option>
+          <option value="<@&1271924904509444214> <:rere:1329942787248099374>">وكيل رقيب</option>
+          <option value="<@&1271924904509444215> <:rq:1329942811054964759>">رقيب</option>
+          <option value="<@&1271924904509444216> <:qwdq:1329942825038778498>">رقيب أول</option>
+          <option value="<@&1271924904530542735> <:jjj:1329944131224735804>">رئيس رقباء</option>
+          <option value="<@&1271924904530542736> <:ggy:1329944091873640520>">ملازم</option>
+          <option value="<@&1271924904530542737> <:hnn:1329944105861513226>">ملازم أول</option>
+          <option value="<@&1271924904530542738> <:N_:1329942837856305252>">نقيب</option>
+          <option value="<@&1271924904530542739> <:K_:1329942847893409925>">رائد</option>
+          <option value="<@&1271924904530542741> <:D_:1329942880122437642>">مقدم</option>
+          <option value="<@&1271924904530542743> <:jju:1329944115667931136>">عقيد</option>
+          <option value="<@&1271924904572227594> <:G_:1329942871331045406>">عميد</option>
+          <option value="<@&1271924904572227596> <:D_:1329942880122437642>">لواء</option>
+          <option value="<@&1271924904572227598> <:S_:1329942890784493675>">فريق</option>
+          <option value="<@&1271924904572227600> <:A_:1329942900976390165>">فريق أول</option>
+        </select>
+      </div>
       <button onclick="generateAndCopy()">نسخ النموذج</button>
     </div>
   </div>
@@ -581,6 +609,7 @@
       const adminDiv = document.getElementById('admin');
       const militaryDiv = document.getElementById('military');
       const authorizedDiv = document.getElementById('authorized');
+      const reassignmentDiv = document.getElementById('reassignment');
 
       if (container) {
         container.style.display = formType ? 'block' : 'none';
@@ -589,6 +618,7 @@
         adminDiv.classList.toggle('active', formType === 'admin');
         militaryDiv.classList.toggle('active', formType === 'military');
         authorizedDiv.classList.toggle('active', formType === 'authorized');
+        reassignmentDiv.classList.toggle('active', formType === 'reassignment');
       } else {
         console.error("Element with id 'container' not found.");
       }
@@ -758,7 +788,7 @@ ${promotions.join('\n')}
 
 ${mentions}
 
-ترسل نسخة إلى مدير مكتب<@&1417408731825705003>الادارية لإعتماد القرار
+ترسل نسخة إلى مدير مكتب<@&1271924904467628180>الادارية لإعتماد القرار
 
 \`\`\`diff
 + في الختام سائلين الله لهم التوفيق والسداد
@@ -894,6 +924,48 @@ ${assignmentList}
 <@725655535172714608> <:__:1331348769610141839>**`;
         } else {
           showNotification('يرجى تعبئة بيانات التعيين المعتمد!', 'error');
+          return;
+        }
+      } else if (formType === 'reassignment') {
+        const telegramNumber = document.getElementById('telegramNumberReassignment0').value || 'غير محدد';
+        const userIdsInput = document.getElementById('userIdsReassignment0')?.value;
+        const rank = document.getElementById('rankReassignment0')?.value;
+
+        if (userIdsInput && rank) {
+          const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
+          const userIds = userIdsRaw.map(id => `<@${id}>`);
+          const mentions = userIds.join('\n\n');
+          const reassignmentList = `يتم إعادة العسكري المذكور أدناه إلى الخدمة:\n\n${mentions}\n\nبرتبة: ${rank}\n\n`;
+
+          outputText = `
+**﷽
+
+صــادر:${issuerPrefix}${issuerAfterSader}
+-
+الـ ${issuerAfterAl}
+
+\`برقية رقم: ${telegramNumber}\`
+
+\`الموضوع: إعادة الخدمة\`
+
+${reassignmentList}
+
+وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
+
+ترسل نسخة لـ <@&1271924904467628180>
+
+\`\`\`diff
++ في الختام نسأل الله العزيز الحكيم التوفيق والسداد
+\`\`\`
+
+توقيع واعتماد:
+<@&1271924904593330267>
+<@1276531558798327859> <:__:1331348769610141839>
+
+<@&1271924904572227603>
+<@725655535172714608> <:__:1331348769610141839>**`;
+        } else {
+          showNotification('يرجى تعبئة بيانات إعادة الخدمة!', 'error');
           return;
         }
       }
