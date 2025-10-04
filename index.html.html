@@ -37,7 +37,39 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script><!DOCTYPE html>
+        </script><script type="text/javascript">
+var gk_isXlsx = false;
+var gk_xlsxFileLookup = {};
+var gk_fileData = {};
+function filledCell(cell) {
+  return cell !== '' && cell != null;
+}
+function loadFileData(filename) {
+  if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+    try {
+      var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+      var firstSheetName = workbook.SheetNames[0];
+      var worksheet = workbook.Sheets[firstSheetName];
+      var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+      var filteredData = jsonData.filter(row => row.some(filledCell));
+      var headerRowIndex = filteredData.findIndex((row, index) =>
+        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+      );
+      if (headerRowIndex === -1 || headerRowIndex > 25) {
+        headerRowIndex = 0;
+      }
+      var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+      csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+      return csv;
+    } catch (e) {
+      console.error(e);
+      return "";
+    }
+  }
+  return gk_fileData[filename] || "";
+}
+</script>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -370,11 +402,7 @@
         <option value="">اختر قائد</option>
         <option value="شامان القحطاني|<@1276531558798327859>||<@&1271924904593330267>|<@&1271924904572227600> <@1276531558798327859>">شامان القحطاني</option>
         <option value="هيثم الشمري|<@725655535172714608>||<@&1271924904572227603>|<@&1271924904572227598> <@725655535172714608>">هيثم الشمري</option>
-        <option value="رياض الحربي|<@1226723195168493620>||<@&1271924904572227602>|<@&1271924904572227598> <@1226723195168493620>">رياض الحربي</option>
-        <option value="باسل الشمري|<@1199056662640738375>||<@&1271924904572227602>|<@&1271924904572227596> <@1199056662640738375>">باسل الشمري</option>
-        <option value="محمد الجهني|<@1041025088813813810>||<@&1271924904572227602>|<@&1271924904572227596> <@1041025088813813810>">محمد الجهني</option>
-        <option value="مسند بن حمد|<@1125795366588121108>||<@&1271924904572227601>|<@&1271924904572227594> <@1125795366588121108>">مسند بن حمد</option>
-        <option value="متعب الزهراني|<@1187076971931381836>||<@&1271924904572227601>|<@&1271924904572227594> <@1187076971931381836>">متعب الزهراني</option>
+        <option value="متعب الزهراني|<@1187076971931381836>||<@&1271924904572227602>|<@&1271924904572227596> <@1187076971931381836>">متعب الزهراني</option>
       </select>
       <div id="promotion" class="form-section">
         <label for="telegramNumber0">رقم البرقية:</label>
@@ -384,6 +412,8 @@
         <div class="person-group" id="personGroup0">
           <label for="userIds0_0">كوبي ايدي العسكري</label>
           <textarea id="userIds0_0" placeholder="ID"></textarea>
+          <label for="promotionReason0_0">سبب الترقية (اختياري):</label>
+          <textarea id="promotionReason0_0" placeholder="أدخل سبب الترقية (اختياري)"></textarea>
           <label for="rankOld0_0">الرتبة السابقة:</label>
           <select id="rankOld0_0">
             <option value="">اختر رتبة</option>
@@ -600,7 +630,6 @@
       }
       return gk_fileData[filename] || "";
     }
-
     function toggleForm() {
       const formType = document.getElementById('formType').value;
       const container = document.getElementById('container');
@@ -610,7 +639,6 @@
       const militaryDiv = document.getElementById('military');
       const authorizedDiv = document.getElementById('authorized');
       const reassignmentDiv = document.getElementById('reassignment');
-
       if (container) {
         container.style.display = formType ? 'block' : 'none';
         promotionDiv.classList.toggle('active', formType === 'promotion');
@@ -623,7 +651,6 @@
         console.error("Element with id 'container' not found.");
       }
     }
-
     let personCount = 1;
     function addPerson() {
       personCount++;
@@ -633,6 +660,8 @@
       personGroup.innerHTML = `
         <label for="userIds0_${personCount}">معرفات المستخدمين (يمكن إدخال متعددة في سطور):</label>
         <textarea id="userIds0_${personCount}" placeholder="أدخل المعرفات، واحد في كل سطر أو مفصولة بفواصل"></textarea>
+        <label for="promotionReason0_${personCount}">سبب الترقية (اختياري):</label>
+        <textarea id="promotionReason0_${personCount}" placeholder="أدخل سبب الترقية (اختياري)"></textarea>
         <label for="rankOld0_${personCount}">الرتبة السابقة:</label>
         <select id="rankOld0_${personCount}">
           <option value="">اختر رتبة</option>
@@ -679,44 +708,38 @@
       `;
       document.getElementById('promotion').insertBefore(personGroup, document.querySelector('#promotion .add-person'));
     }
-
     function removePerson(index) {
       const personGroup = document.getElementById(`personGroup${index}`);
       if (personGroup) {
         personGroup.remove();
       }
     }
-
     function generateAndCopy() {
       const formType = document.getElementById('formType').value;
       const issuer = document.getElementById('issuer').value;
       let outputText = '';
-
       if (!issuer) {
         showNotification('يرجى اختيار القائد!', 'error');
         return;
       }
-
       const [issuerName, issuerMention, issuerPrefix, issuerAfterSader, issuerAfterAl] = issuer.split('|');
-
       if (formType === 'promotion') {
         const telegramNumber = document.getElementById('telegramNumber0').value || 'غير محدد';
         const promotionType = document.getElementById('promotionType0').value || 'الترقيات المستحقة';
         let promotions = [];
-
         for (let i = 0; i <= personCount; i++) {
           const userIdsInput = document.getElementById(`userIds0_${i}`)?.value;
+          const promotionReason = document.getElementById(`promotionReason0_${i}`)?.value;
           const rankOld = document.getElementById(`rankOld0_${i}`)?.value;
           const rankNew = document.getElementById(`rankNew0_${i}`)?.value;
-
           if (userIdsInput && rankOld && rankNew) {
             const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
             const userIds = userIdsRaw.map(id => `<@${id}>`);
             const mentions = userIds.join('\n\n');
-            promotions.push(`من رتبة ${rankOld} إلى رتبة ${rankNew}\n\n${mentions}\n\n`);
+            const reasonText = promotionReason ? `\n\ ${promotionReason}\n\n` : '\n\n';
+            promotions.push(`من رتبة ${rankOld} إلى رتبة ${rankNew}\n\n${mentions}${reasonText}`);
           }
         }
-
         if (promotions.length > 0) {
           outputText = `
 **﷽
@@ -729,11 +752,11 @@
 
 \`الموضوع: ${promotionType}\`
 
-يتم ترقية العسكريين المذكورين أدناه:
+يتم ترقية العسكري المذكور أدناه:
 
 ${promotions.join('\n')}
 
-وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
+وفقك الله وجعلها عونًا لك لـ خدمة القطاع والمدينة
 
 ترسل نسخة لـ <@&1271924904467628180>
 
@@ -761,16 +784,13 @@ ${promotions.join('\n')}
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
         const startDate = `${year}/${month}/${day}`;
-
         if (!userIdsInput || !rank) {
           showNotification('يرجى تعبئة بيانات التوظيف!', 'error');
           return;
         }
-
         const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
         const userIds = userIdsRaw.map(id => `<@${id}>`);
         const mentions = userIds.join('\n');
-
         outputText = `
 **﷽
 
@@ -788,7 +808,7 @@ ${promotions.join('\n')}
 
 ${mentions}
 
-ترسل نسخة إلى مدير مكتب<@&1271924904467628180>الادارية لإعتماد القرار
+ترسل نسخة إلى مدير مكتب<@&1417408731825705003> لإعتماد القرار
 
 \`\`\`diff
 + في الختام سائلين الله لهم التوفيق والسداد
@@ -804,13 +824,11 @@ ${mentions}
         const telegramNumber = document.getElementById('telegramNumberAdmin0').value || 'غير محدد';
         const userIdsInput = document.getElementById('userIdsAdmin0')?.value;
         const rank = document.getElementById('rankAdmin0')?.value;
-
         if (userIdsInput && rank) {
           const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
           const userIds = userIdsRaw.map(id => `<@${id}>`);
           const mentions = userIds.join('\n\n');
           const assignmentList = `يتم تعيين المذكور أدناه:\n\n${mentions}\n\nبرتبة: ${rank}\n\n`;
-
           outputText = `
 **﷽
 
@@ -824,7 +842,7 @@ ${mentions}
 
 ${assignmentList}
 
-وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
+وفقك الله وجعلها عونًا لك لـ خدمة القطاع والمدينة
 
 ترسل نسخة لـ <@&1271924904467628180>
 
@@ -846,13 +864,11 @@ ${assignmentList}
         const telegramNumber = document.getElementById('telegramNumberMilitary0').value || 'غير محدد';
         const userIdsInput = document.getElementById('userIdsMilitary0')?.value;
         const rank = document.getElementById('rankMilitary0')?.value;
-
         if (userIdsInput && rank) {
           const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
           const userIds = userIdsRaw.map(id => `<@${id}>`);
           const mentions = userIds.join('\n\n');
           const assignmentList = `يتم تعيين المذكور أدناه:\n\n${mentions}\n\nبرتبة: ${rank}\n\n`;
-
           outputText = `
 **﷽
 
@@ -866,7 +882,7 @@ ${assignmentList}
 
 ${assignmentList}
 
-وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
+وفقك الله وجعلها عونًا لك لـ خدمة القطاع والمدينة
 
 ترسل نسخة لـ <@&1271924904467628180>
 
@@ -888,13 +904,11 @@ ${assignmentList}
         const telegramNumber = document.getElementById('telegramNumberAuthorized0').value || 'غير محدد';
         const userIdsInput = document.getElementById('userIdsAuthorized0')?.value;
         const rank = document.getElementById('rankAuthorized0')?.value;
-
         if (userIdsInput && rank) {
           const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
           const userIds = userIdsRaw.map(id => `<@${id}>`);
           const mentions = userIds.join('\n\n');
           const assignmentList = `يتم تعيين المذكور أدناه:\n\n${mentions}\n\nبرتبة: ${rank}\n\n`;
-
           outputText = `
 **﷽
 
@@ -908,7 +922,7 @@ ${assignmentList}
 
 ${assignmentList}
 
-وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
+وفقك الله وجعلها عونًا لك لـ خدمة القطاع والمدينة
 
 ترسل نسخة لـ <@&1271924904467628180>
 
@@ -930,13 +944,11 @@ ${assignmentList}
         const telegramNumber = document.getElementById('telegramNumberReassignment0').value || 'غير محدد';
         const userIdsInput = document.getElementById('userIdsReassignment0')?.value;
         const rank = document.getElementById('rankReassignment0')?.value;
-
         if (userIdsInput && rank) {
           const userIdsRaw = userIdsInput.split(/\n|,/).map(id => id.trim()).filter(id => id);
           const userIds = userIdsRaw.map(id => `<@${id}>`);
           const mentions = userIds.join('\n\n');
           const reassignmentList = `يتم إعادة العسكري المذكور أدناه إلى الخدمة:\n\n${mentions}\n\nبرتبة: ${rank}\n\n`;
-
           outputText = `
 **﷽
 
@@ -950,7 +962,7 @@ ${assignmentList}
 
 ${reassignmentList}
 
-وفقكم الله وجعلها عونًا لكم لـ خدمة القطاع والمدينة
+وفقك الله وجعلها عونًا لك لـ خدمة القطاع والمدينة
 
 ترسل نسخة لـ <@&1271924904467628180>
 
@@ -959,6 +971,7 @@ ${reassignmentList}
 \`\`\`
 
 توقيع واعتماد:
+
 <@&1271924904593330267>
 <@1276531558798327859> <:__:1331348769610141839>
 
@@ -969,14 +982,12 @@ ${reassignmentList}
           return;
         }
       }
-
       navigator.clipboard.writeText(outputText).then(() => {
         showNotification('تم النسخ بنجاح', 'success');
       }).catch(() => {
         showNotification('فشل النسخ', 'error');
       });
     }
-
     function showNotification(message, type) {
       const notification = document.getElementById('notification');
       notification.innerText = message;
@@ -985,19 +996,16 @@ ${reassignmentList}
         notification.className = 'custom-alert';
       }, 3000);
     }
-
     // Starfield Animation
     const canvas = document.getElementById('starfield');
     const ctx = canvas.getContext('2d');
     let stars = [];
-
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-
     function createStar() {
       return {
         x: Math.random() * canvas.width,
@@ -1007,14 +1015,12 @@ ${reassignmentList}
         opacity: Math.random() * 0.7 + 0.3
       };
     }
-
     function initStars() {
       stars = [];
       for (let i = 0; i < 150; i++) {
         stars.push(createStar());
       }
     }
-
     function animateStars() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       stars.forEach(star => {
@@ -1030,10 +1036,8 @@ ${reassignmentList}
       });
       requestAnimationFrame(animateStars);
     }
-
     initStars();
     animateStars();
-
     // Loading Animation
     window.addEventListener('load', () => {
       setTimeout(() => {
